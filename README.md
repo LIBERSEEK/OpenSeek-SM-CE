@@ -14,7 +14,7 @@ bash install.sh
 
 The installer generates a random JWT secret and waits for the services to become healthy. Open http://localhost:4007 and register the first account. The deployment runs the application, PostgreSQL, Redis, and Temporal with its own PostgreSQL database.
 
-For a remote server, run `cp .env.docker.example .env`, set a random `JWT_SECRET`, and update `MAIN_URL`, `FRONTEND_URL`, and `NEXT_PUBLIC_BACKEND_URL` to the externally reachable address before running the installer. For HTTPS, configure your reverse proxy and set `NOT_SECURED=false`. Restrict public registration with `DISABLE_REGISTRATION=true` after creating the intended accounts.
+For a remote server, run `cp .env.docker.example .env`, set a random `JWT_SECRET`, and update `MAIN_URL`, `FRONTEND_URL`, and `NEXT_PUBLIC_BACKEND_URL` to the externally reachable address before running the installer. For HTTPS, configure your reverse proxy and leave `NOT_SECURED=` empty (the application treats any nonempty value as enabled). Restrict public registration with `DISABLE_REGISTRATION=true` after creating the intended accounts.
 
 ## Image
 
