@@ -1,4 +1,4 @@
-# OpenSeek-SM Docker v0.0.1
+# OpenSeek-SM Docker v0.0.2
 
 OpenSeek-SM self-hosted installation files. The application image is built in a private source repository. This repository contains deployment configuration and documentation.
 
@@ -19,14 +19,14 @@ For a remote server, run `cp .env.docker.example .env`, set a random `JWT_SECRET
 ## Image
 
 ```text
-ghcr.io/liberseek/openseek-sm-ce:v0.0.1
+ghcr.io/liberseek/openseek-sm-ce:v0.0.2
 ```
 
-The release targets Linux amd64 and arm64. The Compose file pins the version; use an explicit version for upgrades.
+The release targets Linux amd64 and arm64. The Compose file pins the version; use an explicit version for upgrades. Existing deployments using the previous `postiz` Compose service names can rerun `bash install.sh`; it removes old containers and preserves named data volumes.
 
 ```bash
 docker compose ps
-docker compose logs --tail=100 postiz
+docker compose logs --tail=100 openseek
 docker compose stop
 docker compose start
 ```
@@ -36,8 +36,9 @@ docker compose start
 Back up `.env`, the application PostgreSQL database, Temporal PostgreSQL database, and all named volumes before upgrading. Keep `JWT_SECRET` stable. Database schema updates run when the application starts; rolling back an image alone does not roll back the database.
 
 ```bash
-docker compose exec -T postiz-postgres pg_dump -U postiz-user postiz-db-local > openseek-db.sql
+docker exec openseek-postgres sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > openseek-db.sql
 docker compose exec -T temporal-postgresql pg_dumpall -U temporal > temporal-db.sql
+docker compose down --remove-orphans
 docker compose pull
 docker compose up -d --wait --wait-timeout 420
 ```

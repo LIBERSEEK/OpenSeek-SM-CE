@@ -1,5 +1,5 @@
 services:
-  postiz:
+  openseek:
     image: ${OPENSEEK_IMAGE:-ghcr.io/liberseek/openseek-sm-ce}:${OPENSEEK_VERSION:-v0.0.1}
     container_name: openseek
     restart: unless-stopped
@@ -10,10 +10,12 @@ services:
       MAIN_URL: ${MAIN_URL:-http://localhost:4007}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4007}
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:4007/api}
-      BACKEND_INTERNAL_URL: http://postiz:3000
+      BACKEND_INTERNAL_URL: http://openseek:3000
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
-      DATABASE_URL: postgresql://postiz-user:postiz-password@postiz-postgres:5432/postiz-db-local
-      REDIS_URL: redis://postiz-redis:6379
+      DATABASE_URL: postgresql://postiz-user:postiz-password@openseek-postgres:5432/postiz-db-local
+      REDIS_URL: redis://openseek-redis:6379
+      POSTGRES_HOST: openseek-postgres
+      REDIS_HOST: openseek-redis
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-default}
       IS_GENERAL: ${IS_GENERAL:-true}
@@ -37,9 +39,9 @@ services:
     networks:
       - openseek-network
     depends_on:
-      postiz-postgres:
+      openseek-postgres:
         condition: service_healthy
-      postiz-redis:
+      openseek-redis:
         condition: service_healthy
       temporal:
         condition: service_started
@@ -50,7 +52,7 @@ services:
       timeout: 5s
       retries: 20
 
-  postiz-postgres:
+  openseek-postgres:
     image: postgres:17-alpine
     container_name: openseek-postgres
     restart: unless-stopped
@@ -68,7 +70,7 @@ services:
       timeout: 5s
       retries: 20
 
-  postiz-redis:
+  openseek-redis:
     image: redis:7.2-alpine
     container_name: openseek-redis
     restart: unless-stopped
