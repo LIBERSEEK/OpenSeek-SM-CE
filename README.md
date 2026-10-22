@@ -26,7 +26,7 @@ The release targets Linux amd64 and arm64. The Compose file pins the version; us
 
 ```bash
 docker compose ps
-docker compose logs --tail=100 postiz
+docker compose logs --tail=100 openseek
 docker compose stop
 docker compose start
 ```
@@ -38,6 +38,7 @@ Back up `.env`, the application PostgreSQL database, Temporal PostgreSQL databas
 ```bash
 docker exec openseek-postgres sh -c 'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > openseek-db.sql
 docker compose exec -T temporal-postgresql pg_dumpall -U temporal > temporal-db.sql
+docker compose down --remove-orphans
 docker compose pull
 docker compose up -d --wait --wait-timeout 420
 ```

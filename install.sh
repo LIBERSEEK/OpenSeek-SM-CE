@@ -31,6 +31,12 @@ if [ ! -f .env ]; then
   echo "Created .env with a generated JWT_SECRET."
 fi
 
+legacy_service="$(docker inspect --type container --format '{{ index .Config.Labels \"com.docker.compose.service\" }}' openseek 2>/dev/null || true)"
+if [ "$legacy_service" = postiz ]; then
+  echo "Stopping the previous service names while preserving database volumes..."
+  docker compose down --remove-orphans
+fi
+
 echo "Pulling OpenSeek-SM services..."
 docker compose pull
 echo "Starting OpenSeek-SM..."
@@ -38,4 +44,4 @@ docker compose up -d --wait --wait-timeout 420
 
 echo
 echo "OpenSeek-SM is ready. Open MAIN_URL configured in .env (default http://localhost:4007)."
-echo "Use 'docker compose logs -f postiz' to follow startup."
+echo "Use 'docker compose logs -f openseek' to follow startup."
