@@ -1,4 +1,4 @@
-# OpenSeek-SM Docker v0.0.1
+# OpenSeek-SM Docker v0.0.2
 
 OpenSeek-SM self-hosted installation files. The application image is built in a private source repository. This repository contains deployment configuration and documentation.
 
@@ -19,10 +19,10 @@ For a remote server, run `cp .env.docker.example .env`, set a random `JWT_SECRET
 ## Image
 
 ```text
-ghcr.io/liberseek/openseek-sm-ce:v0.0.1
+ghcr.io/liberseek/openseek-sm-ce:v0.0.2
 ```
 
-The release targets Linux amd64 and arm64. The Compose file pins the version; use an explicit version for upgrades.
+The release targets Linux amd64 and arm64. The Compose file pins the version; use an explicit version for upgrades. Existing deployments using the previous `postiz` Compose service names can rerun `bash install.sh`; it removes old containers and preserves named data volumes.
 
 ```bash
 docker compose ps
